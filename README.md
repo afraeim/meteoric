@@ -53,6 +53,19 @@ bun run build:backend
 - Installer target is user-local (`~/.local/bin`).
 - Runtime app data is stored in platform-resolved app data directories by Tauri.
 
+## Windows install
+
+Windows installers are published in each GitHub Release:
+
+- `*.msi` (recommended)
+- `*.exe` (NSIS)
+
+Download from the repository Releases page and run the installer normally.
+
+Need an installer before the next release? Run the GitHub Actions workflow
+`Build Windows Installer` and download the artifact named
+`meteoric-windows-exe-installer`.
+
 ## Repository status
 
 This repository is an actively iterated migration from Meteroic into a dedicated `meteoric` project identity with provider abstraction and release hardening.

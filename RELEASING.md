@@ -15,6 +15,12 @@ When you are ready to ship, merge that PR. That triggers the build workflow, whi
 2. Builds `Meteroic.app`
 3. Creates a GitHub Release with the changelog notes and `Meteroic.app.tar.gz` as the downloadable asset
 
+On release, CI now also builds and uploads Windows installer artifacts:
+
+- `*.msi` (Windows Installer)
+- `*.exe` (NSIS installer)
+- `windows-checksums.txt`
+
 ## Commit Types and Version Bumps
 
 release-please reads commit prefixes to decide how to bump the version:
