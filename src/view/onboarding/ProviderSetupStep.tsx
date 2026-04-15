@@ -6,7 +6,7 @@ type Provider = 'gemini' | 'perplexity' | 'openai' | 'anthropic' | 'ollama';
 
 const DEFAULT_MODEL_BY_PROVIDER: Record<Provider, string> = {
   gemini: 'gemini-2.5-flash',
-  perplexity: 'sonar',
+  perplexity: 'xai/grok-4-1-fast-non-reasoning',
   openai: 'gpt-4.1-mini',
   anthropic: 'claude-3-7-sonnet-latest',
   ollama: 'gemma4:e2b',
