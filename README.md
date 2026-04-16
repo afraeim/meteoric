@@ -7,15 +7,15 @@ It starts from the Meteroic architecture and is now adapted for **OpenAI**, **An
 ## One-line install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/quiet-node/meteoric/main/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/afraeim/meteoric/main/scripts/install.sh | bash
 ```
 
 The installer:
 
-- detects OS/architecture,
-- downloads the latest release artifact,
-- verifies `sha256` via `checksums.txt`,
-- installs to `~/.local/bin/meteoric` on Linux.
+- supports Linux (`apt`, `dnf`, `yum`),
+- installs build dependencies + Bun + Rust (if missing),
+- clones and builds Meteoric from source,
+- installs the generated `.deb`/`.rpm` as a regular system app.
 
 ## Local development
 
