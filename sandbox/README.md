@@ -1,4 +1,4 @@
-# Thuki Sandbox
+# Meteoric Sandbox
 
 This directory contains the infrastructure-as-code for running the generative engine in an isolated, secure Docker sandbox.
 
@@ -33,7 +33,7 @@ The sandbox is intended for:
 - Environments where strong process isolation and zero host-filesystem writes are required
 - Preventing long-term persistence of model weights on the host disk
 
-> **Optional component:** If you already have [Ollama](https://ollama.com) installed and a model pulled on port `11434`, you can skip the sandbox entirely. Thuki connects to `http://127.0.0.1:11434` regardless of whether the server is native or sandboxed.
+> **Optional component:** If you already have [Ollama](https://ollama.com) installed and a model pulled on port `11434`, you can skip the sandbox entirely. Meteoric connects to `http://127.0.0.1:11434` regardless of whether the server is native or sandboxed.
 
 **Start the sandbox:**
 

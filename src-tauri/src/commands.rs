@@ -260,7 +260,7 @@ pub fn load_provider_config_with_db(conn: Option<&rusqlite::Connection>) -> Prov
         &["METEORIC_AI_PROVIDER", "METERIC_AI_PROVIDER"],
     )
     .map(|raw| provider_from_str(&raw))
-    .unwrap_or(AiProvider::OpenAI);
+    .unwrap_or(AiProvider::Perplexity);
 
     let openai_api_key = config_or_env(conn, CONFIG_OPENAI_API_KEY, &["OPENAI_API_KEY"]);
     let openai_base_url = env_non_empty(&["METEORIC_OPENAI_BASE_URL", "METERIC_OPENAI_BASE_URL"])

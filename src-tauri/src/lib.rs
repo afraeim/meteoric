@@ -24,6 +24,8 @@ pub mod screenshot;
 
 #[cfg(target_os = "macos")]
 mod activator;
+#[cfg(not(target_os = "macos"))]
+mod activator_non_macos;
 pub mod context;
 pub mod permissions;
 
@@ -317,6 +319,8 @@ fn show_overlay(app_handle: &tauri::AppHandle, ctx: crate::context::ActivationCo
         return;
     }
     if let Some(window) = app_handle.get_webview_window("main") {
+        let _ = window.set_always_on_top(true);
+        let _ = window.unminimize();
         let _ = window.show();
         let _ = window.set_focus();
         emit_overlay_visibility(
@@ -334,8 +338,17 @@ fn show_overlay(app_handle: &tauri::AppHandle, ctx: crate::context::ActivationCo
 ///
 /// Uses an atomic flag as the single source of truth for intended visibility,
 /// which avoids race conditions with the native panel state during animations.
-#[cfg(not(target_os = "linux"))]
+#[cfg(not(target_os = "macos"))]
 fn toggle_overlay(app_handle: &tauri::AppHandle, ctx: crate::context::ActivationContext) {
+    if let Some(window) = app_handle.get_webview_window("main") {
+        if window.is_minimized().ok().unwrap_or(false) {
+            // A minimized window should be restored on trigger, not hidden again.
+            OVERLAY_INTENDED_VISIBLE.store(false, Ordering::SeqCst);
+            show_overlay(app_handle, ctx);
+            return;
+        }
+    }
+
     if OVERLAY_INTENDED_VISIBLE.load(Ordering::SeqCst) {
         request_overlay_hide(app_handle);
     } else {
@@ -724,6 +737,20 @@ pub fn run() {
                 app.manage(activator);
             }
 
+            #[cfg(not(target_os = "macos"))]
+            {
+                let app_handle = app.handle().clone();
+                let activator = activator_non_macos::OverlayActivator::new();
+                activator.start(move || {
+                    let handle = app_handle.clone();
+                    let handle2 = app_handle.clone();
+                    let _ = handle.run_on_main_thread(move || {
+                        toggle_overlay(&handle2, crate::context::ActivationContext::empty())
+                    });
+                });
+                app.manage(activator);
+            }
+
             // ── Persistent HTTP client ────────────────────────────────
             app.manage(reqwest::Client::new());
 
@@ -753,6 +780,19 @@ pub fn run() {
             // ── Orphaned image cleanup (startup + periodic) ─────────
             run_image_cleanup(app.handle());
             spawn_periodic_image_cleanup(app.handle().clone());
+
+            // ── Linux startup visibility ─────────────────────────────
+            // The window is configured with `visible: false` in tauri.conf.
+            // On Linux we intentionally skip tray creation, so there is no
+            // tray menu action to unhide it. Explicitly show/focus the main
+            // window at startup so packaged Ubuntu/Linux installs are visible.
+            #[cfg(target_os = "linux")]
+            if let Some(window) = app.get_webview_window("main") {
+                let _ = window.set_always_on_top(true);
+                let _ = window.unminimize();
+                let _ = window.show();
+                let _ = window.set_focus();
+            }
 
             Ok(())
         })

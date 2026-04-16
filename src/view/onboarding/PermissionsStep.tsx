@@ -217,7 +217,7 @@ export function PermissionsStep() {
   }, [stopAxPolling]);
 
   const handleOpenScreenRecording = useCallback(async () => {
-    // Register Thuki in TCC (adds it to the Screen Recording list) then open
+    // Register Meteoric in TCC (adds it to the Screen Recording list) then open
     // System Settings directly so the user can toggle it on without hunting.
     // The registration call may briefly show a macOS system prompt on first use.
     await invoke('request_screen_recording_access');
